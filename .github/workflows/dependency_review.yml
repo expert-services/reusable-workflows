@@ -1,0 +1,68 @@
+name: Dependency Review
+
+on: 
+  workflow_call:
+    inputs:
+      language:
+        description: Programming language application is written in (e.g., java-maven, javascript)
+        required: true
+        type: string
+      java-version:
+        description: Should be included if the language input supplied is java-maven.
+        required: false
+        type: string
+      java-package:
+        description: Should be included if the language input supplied is java-maven.
+        required: false
+        type: string
+      java-distribution:
+        description: Should be included if the language input supplied is java-maven.
+        required: false
+        type: string
+      snapshot-dependency-file-name:
+        description: Specifies the name that should be associated with the manifest when submitting the dependency snapshot.
+        type: string
+        required: false
+jobs:
+  dependency_analysis:
+    name: Dependency Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      statuses: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java
+        if: ${{ inputs.language == 'java-maven' }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.java-version }} 
+          java-package: ${{ inputs.java-package }} 
+          distribution: ${{ inputs.java-distribution}} 
+      - name: Submit dependency snapshot for Java (Maven)
+        if: ${{ inputs.language == 'java-maven' }}
+        uses: advanced-security/maven-dependency-submission-action@multi-module
+        with:
+          snapshot-include-file-name: true
+          snapshot-dependency-file-name: ${{ inputs.snapshot-dependency-file-name }}
+      - name: Submit dependency snapshot for Java (Gradle)
+        if: ${{ inputs.language == 'java-gradle' }}
+        uses: mikepenz/gradle-dependency-submission@v0.8.3
+      - name: Dependency validation
+        if: ${{ github.event_name == 'pull_request' }}
+        id: dependency_validation
+        uses: actions/dependency-review-action@v2
+        continue-on-error: true
+        with:
+          fail-on-scopes: "runtime, development, unknown"
+      - name: Publish status to PR
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: octodemo/github-status-action@v2
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          state: ${{ steps.dependency_validation.outcome }}
+          context: Dependency scanning results / Dependency Review
+          description: "${{ steps.dependency_validation.outcome }} (see details for more information)"
+          sha: ${{ github.event.pull_request.head.sha }}
+          target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}

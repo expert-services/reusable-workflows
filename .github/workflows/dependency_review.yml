@@ -45,7 +45,7 @@ jobs:
         uses: advanced-security/maven-dependency-submission-action@main
         with:
           snapshot-include-file-name: true
-          snapshot-dependency-file-name: ${{ inputs.snapshot-dependency-file-name }}
+         # snapshot-dependency-file-name: ${{ inputs.snapshot-dependency-file-name }}
       - name: Submit dependency snapshot for Java (Gradle)
         if: ${{ inputs.language == 'java-gradle' }}
         uses: mikepenz/gradle-dependency-submission@v0.8.3

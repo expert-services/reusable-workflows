@@ -3,20 +3,20 @@ name: Dependency Review
 on: 
   workflow_call:
     inputs:
-      language:
-        description: Programming language application is written in (e.g., java-maven, javascript)
+      ecosystem:
+        description: Package dependency ecosystem that the application is written in (e.g., maven, gradle, npm)
         required: true
         type: string
       java-version:
-        description: Should be included if the language input supplied is java-maven.
+        description: Should be included if the ecosystem input supplied is maven.
         required: false
         type: string
       java-package:
-        description: Should be included if the language input supplied is java-maven.
+        description: Should be included if the ecosystem input supplied is maven.
         required: false
         type: string
       java-distribution:
-        description: Should be included if the language input supplied is java-maven.
+        description: Should be included if the ecosystem input supplied is maven.
         required: false
         type: string
       snapshot-dependency-file-name:
@@ -34,20 +34,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Java
-        if: ${{ inputs.language == 'java-maven' }}
+        if: ${{ inputs.ecosystem == 'maven' }}
         uses: actions/setup-java@v3
         with:
           java-version: ${{ inputs.java-version }} 
           java-package: ${{ inputs.java-package }} 
           distribution: ${{ inputs.java-distribution}} 
       - name: Submit dependency snapshot for Java (Maven)
-        if: ${{ inputs.language == 'java-maven' }}
-        uses: advanced-security/maven-dependency-submission-action@main
+        if: ${{ inputs.ecosystem == 'maven' }}
+        uses: advanced-security/maven-dependency-submission-action@v3
         with:
           snapshot-include-file-name: true
-         # snapshot-dependency-file-name: ${{ inputs.snapshot-dependency-file-name }}
       - name: Submit dependency snapshot for Java (Gradle)
-        if: ${{ inputs.language == 'java-gradle' }}
+        if: ${{ inputs.ecosystem == 'gradle' }}
         uses: mikepenz/gradle-dependency-submission@v0.8.4
       - name: Dependency validation
         if: ${{ github.event_name == 'pull_request' }}

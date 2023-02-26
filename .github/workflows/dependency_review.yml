@@ -7,6 +7,22 @@ on:
         description: Package dependency ecosystem that the application is written in (e.g., maven, gradle, npm)
         required: true
         type: string
+      java-version:
+        description: Should be included if the ecosystem input supplied is maven.
+        required: false
+        type: string
+      java-package:
+        description: Should be included if the ecosystem input supplied is maven.
+        required: false
+        type: string
+      java-distribution:
+        description: Should be included if the ecosystem input supplied is maven.
+        required: false
+        type: string
+      snapshot-dependency-file-name:
+        description: Specifies the name that should be associated with the manifest when submitting the dependency snapshot.
+        type: string
+        required: false
 jobs:
   dependency_analysis:
     name: Dependency Analysis
@@ -17,6 +33,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup Java
+        if: ${{ inputs.ecosystem == 'maven' }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.java-version }} 
+          java-package: ${{ inputs.java-package }} 
+          distribution: ${{ inputs.java-distribution}} 
       - name: Submit dependency snapshot for Java (Maven)
         if: ${{ inputs.ecosystem == 'maven' }}
         uses: advanced-security/maven-dependency-submission-action@v3

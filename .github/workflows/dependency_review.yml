@@ -48,7 +48,7 @@ jobs:
          # snapshot-dependency-file-name: ${{ inputs.snapshot-dependency-file-name }}
       - name: Submit dependency snapshot for Java (Gradle)
         if: ${{ inputs.language == 'java-gradle' }}
-        uses: mikepenz/gradle-dependency-submission@v0.8.3
+        uses: mikepenz/gradle-dependency-submission@v0.8.4
       - name: Dependency validation
         if: ${{ github.event_name == 'pull_request' }}
         id: dependency_validation

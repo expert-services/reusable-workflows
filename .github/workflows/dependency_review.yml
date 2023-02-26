@@ -11,10 +11,6 @@ on:
         description: Should be included if the ecosystem input supplied is maven.
         required: false
         type: string
-      java-package:
-        description: Should be included if the ecosystem input supplied is maven.
-        required: false
-        type: string
       java-distribution:
         description: Should be included if the ecosystem input supplied is maven.
         required: false
@@ -30,11 +26,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Java
-        if: ${{ inputs.ecosystem == 'maven' }}
+        if: ${{ inputs.java-version != '' && inputs.java-distribution != '' }}
         uses: actions/setup-java@v3
         with:
           java-version: ${{ inputs.java-version }} 
-          java-package: ${{ inputs.java-package }} 
           distribution: ${{ inputs.java-distribution}} 
       - name: Submit dependency snapshot for Java (Maven)
         if: ${{ inputs.ecosystem == 'maven' }}

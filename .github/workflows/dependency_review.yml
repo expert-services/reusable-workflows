@@ -19,10 +19,6 @@ on:
         description: Should be included if the ecosystem input supplied is maven.
         required: false
         type: string
-      snapshot-dependency-file-name:
-        description: Specifies the name that should be associated with the manifest when submitting the dependency snapshot.
-        type: string
-        required: false
 jobs:
   dependency_analysis:
     name: Dependency Analysis

@@ -1,6 +1,6 @@
 # dependency_review
 
-A reusasble workflow that generates a depenency graph for Java projects (e.g., Maven and Gradle) so that transitive dependency information is uploaded to the [submission API](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/using-the-dependency-submission-api). Additionally creates a Dependency Review status on Pull Requests so that branch protection rules can be leverages.
+A reusasble workflow that generates a depenency graph for Java projects (e.g., Maven and Gradle) so that transitive dependency information is uploaded to the [submission API](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/using-the-dependency-submission-api). Additionally creates a Dependency Review status check on Pull Requests so that branch protection rules can be leveraged.
 
 This is more-or-less a wrapper for these two Java-specific actions. However, this reusable workflow also supports JavaScript as an `ecosystem` input.
 - [maven-dependency-submission-action](https://github.com/advanced-security/maven-dependency-submission-action)
@@ -24,7 +24,9 @@ jobs:
 ```
 
 ## Prerequisites
-
+- To ensure that CLI binaries are available (e.g., `mvn` and `gradle`) the [setup-java action](https://github.com/actions/setup-java) is used to prepare the Java environment. This requires inputs related to Java distribution and version, as noted in the Inputs section below. 
+- As this is a reusable workflow, there are no configuration options (e.g., Maven settings) currently available. This workflow is meant to target _typical_ Java projects, having a `pom.xml` file in the root of the repository.
+- It is still difficult to determine which dependencies that are listed in the Dependency Graph (on the Insights tab of a repository) are direct versus those that are transitive (indirect). This can lead to confusion about how to remediate (i.e. pin) specific transitive dependencies because the dependency chain is not present in the GitHub UI.
 
 ## Inputs
 | Input     | Required | Description                                                                                |

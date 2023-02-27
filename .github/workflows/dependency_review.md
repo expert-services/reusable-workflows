@@ -41,16 +41,28 @@ jobs:
 The below examples demonstrate the capabilities of this reusable workflow.
 
 ## Observing Vulnerable Transitive Dependencies 
-In this example, it is shown how a vulnerable transitive dependency is identified by executing the `workflow_dispatch` trigger.
+In this example, it is shown how a vulnerable transitive dependency is identified by executing the `workflow_dispatch` trigger. To demonstrate this, [a fork](https://github.com/oodles-noodles/spark) of the apache/spark repository was created.
 
 ### Default Dependabot Alerts
+When looking at the default output of Dependabot for the `pom.xml` manifest, it is seen that there are 11 alerts identified.
 
-![image](https://user-images.githubusercontent.com/107562400/221617553-bdc30855-80de-4166-b2da-a0e95195a820.png)
+![image](https://user-images.githubusercontent.com/107562400/221623539-e6a59e32-00a5-4395-8ff3-4656132086f1.png)
 
 
 ### Additional Dependabot Alerts
+After running the workflow, the number of alerts identified by Dependabot increased to 19.
+
+![image](https://user-images.githubusercontent.com/107562400/221627820-c547b4ed-d10d-47c2-ac01-08279cd11eab.png)
+
 
 ### Dependency Graph 
+Viewing the default dependency snapshot for the `pom.xml` file it is seen that there are 217 identified dependencies.
+
+![image](https://user-images.githubusercontent.com/107562400/221620926-259c5b6d-2920-48a6-839a-41e305858106.png)
+
+Examining the snapshot for `pom.xml` that is uploaded via the Submission API (note the Beta tag that helps identify it), it is seen that there are now 419 dependencies.
+
+![image](https://user-images.githubusercontent.com/107562400/221621049-8c349db8-c5c5-4230-aba3-e310377bae13.png)
 
 ## Pull Request Workflow
 In this example, it is shown how developers can prevent directly vulnerable dependencies from being merged as part of a Pull Request.
@@ -66,15 +78,9 @@ Creating a Branch Protection Rule that targets `ma**` includes both `main` and `
 ### Status Checks
 The way that checks are presented resemble how checks for Code Scanning (CodeQL) are natively reported.
 
-
 ![image](https://user-images.githubusercontent.com/107562400/221601572-10730531-5454-42c2-92e9-60a751266641.png)
 
 ### Additional Details
 When selecting the details of the check, further details of the Dependency Review are given. Namely, the vulnerability that was identified, as well as the dependencies that were updated can help a Developer understand why a given Pull Request check is failing. 
 
-
 ![image](https://user-images.githubusercontent.com/107562400/221601709-dae321b7-0901-4fb0-9c9b-714aee55afa7.png)
-
-
-
-

@@ -8,6 +8,7 @@ This is more-or-less a wrapper for these two Java-specific actions. However, thi
 
 
 # Usage
+Simply add a `yaml` file similar to the below to the `.github/workflows` directory of a repository.
 
 ```yaml
 name: Dependency Review

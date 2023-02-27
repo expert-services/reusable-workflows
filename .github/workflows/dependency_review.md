@@ -2,7 +2,7 @@
 
 A reusasble workflow that generates a depenency graph for Java projects (e.g., Maven and Gradle) so that transitive dependency information is uploaded to the [submission API](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/using-the-dependency-submission-api). Additionally creates a Dependency Review status check on Pull Requests so that branch protection rules can be leveraged.
 
-This is more-or-less a wrapper for these two Java-specific actions. However, this reusable workflow also supports JavaScript as an `ecosystem` input.
+This is more-or-less a wrapper for these two Java-specific actions. However, this reusable workflow also supports `npm` as an `ecosystem` input.
 - [maven-dependency-submission-action](https://github.com/advanced-security/maven-dependency-submission-action)
 - [gradle-dependency-submission](https://github.com/mikepenz/gradle-dependency-submission)
 
@@ -43,8 +43,17 @@ The below examples demonstrate the capabilities of this reusable workflow.
 ## Observing Vulnerable Transitive Dependencies 
 In this example, it is shown how a vulnerable transitive dependency is identified by executing the `workflow_dispatch` trigger.
 
+### Default Dependabot Alerts
 
-## Pull Request
+![image](https://user-images.githubusercontent.com/107562400/221617553-bdc30855-80de-4166-b2da-a0e95195a820.png)
+
+
+### Additional Dependabot Alerts
+
+### Dependency Graph 
+
+## Pull Request Workflow
+In this example, it is shown how developers can prevent directly vulnerable dependencies from being merged as part of a Pull Request.
 
 ### Branch Protection Rules
 > **Note**
@@ -54,13 +63,13 @@ Creating a Branch Protection Rule that targets `ma**` includes both `main` and `
 
 ![image](https://user-images.githubusercontent.com/107562400/221601613-e88aba40-d271-4aac-8031-de8adc35492e.png)
 
-
+### Status Checks
 The way that checks are presented resemble how checks for Code Scanning (CodeQL) are natively reported.
 
 
 ![image](https://user-images.githubusercontent.com/107562400/221601572-10730531-5454-42c2-92e9-60a751266641.png)
 
-
+### Additional Details
 When selecting the details of the check, further details of the Dependency Review are given. Namely, the vulnerability that was identified, as well as the dependencies that were updated can help a Developer understand why a given Pull Request check is failing. 
 
 

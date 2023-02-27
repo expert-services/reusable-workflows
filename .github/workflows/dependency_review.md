@@ -31,7 +31,7 @@ jobs:
 |-----------|----------|---------|--------------------------------------------------------------------------------------------|
 | ecosystem | true     |         | Package dependency ecosystem that the application is written in (e.g., maven, gradle, npm) |
 | java-version | false     |         | The Java version to set up for Maven and Gradle projects. Takes a whole or semver Java version. |
-| java-distribution | false     |         | The [distribution(https://github.com/actions/setup-java#supported-distributions) of Java to setup for Maven and Gradle projects |
+| java-distribution | false     |         | The [distribution](https://github.com/actions/setup-java#supported-distributions) of Java to setup for Maven and Gradle projects |
 
 
 # Examples

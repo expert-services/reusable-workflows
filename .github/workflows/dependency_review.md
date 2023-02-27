@@ -37,32 +37,33 @@ jobs:
 
 
 # Examples
-
-## Workflow Dispatch
+The below examples demonstrate the capabilities of this reusable workflow.
 
 ## Observing Vulnerable Transitive Dependencies 
+In this example, it is shown how a vulnerable transitive dependency is identified by executing the `workflow_dispatch` trigger.
+
 
 ## Pull Request
 
 ### Branch Protection Rules
-Creating a Branch Protection Rule that targets `ma**` includes both `main` and `master` in the scope of protection. Requiring the **Dependency scan results** check to pass on Pull Requests effectively ensures that no vulnerabilities exists in any **direct** dependencies that are added or changed in a given manifest file that has been modified as part of a Pull request.
-
 > **Note**
 Dependency Review does not yet take into account the results of the Submission API. Said differently, the status check that is published on a Pull Request as part of Dependency Review does not examine transitive dependencies.
 
-<img width="709" alt="image" src="https://user-images.githubusercontent.com/107562400/221440010-d9880034-3557-4e2a-893a-e86459b4611e.png">
+Creating a Branch Protection Rule that targets `ma**` includes both `main` and `master` in the scope of protection. Requiring the **Dependency scan results** check to pass on Pull Requests effectively ensures that no vulnerabilities exists in any **direct** dependencies that are added or changed in a given manifest file that has been modified as part of a Pull request.
+
+![image](https://user-images.githubusercontent.com/107562400/221601613-e88aba40-d271-4aac-8031-de8adc35492e.png)
 
 
 The way that checks are presented resemble how checks for Code Scanning (CodeQL) are natively reported.
 
 
-<img width="816" alt="image" src="https://user-images.githubusercontent.com/107562400/221440147-93f35c80-3e41-429f-b5ff-adfca50ba2f1.png">
+![image](https://user-images.githubusercontent.com/107562400/221601572-10730531-5454-42c2-92e9-60a751266641.png)
 
 
 When selecting the details of the check, further details of the Dependency Review are given. Namely, the vulnerability that was identified, as well as the dependencies that were updated can help a Developer understand why a given Pull Request check is failing. 
 
 
-<img width="1374" alt="image" src="https://user-images.githubusercontent.com/107562400/221440200-b4c227c9-4125-45e4-829a-187f34dcd668.png">
+![image](https://user-images.githubusercontent.com/107562400/221601709-dae321b7-0901-4fb0-9c9b-714aee55afa7.png)
 
 
 

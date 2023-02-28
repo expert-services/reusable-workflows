@@ -27,7 +27,7 @@ jobs:
 ## Prerequisites
 - To ensure that CLI binaries are available (e.g., `mvn` and `gradle`) the [setup-java action](https://github.com/actions/setup-java) is used to prepare the Java environment. This requires inputs related to Java distribution and version, as noted in the Inputs section below. 
 - As this is a reusable workflow, there are no configuration options (e.g., Maven settings) currently available. This workflow is meant to target _typical_ Java projects, having a `pom.xml` file in the root of the repository.
-- It is still difficult to determine which dependencies that are listed in the Dependency Graph (on the Insights tab of a repository) are direct versus those that are transitive (indirect). This can lead to confusion about how to remediate (i.e. pin) specific transitive dependencies because the dependency chain is not present in the GitHub UI.
+- It is still difficult to determine which dependencies that are listed in the Dependency Graph (on the Insights tab of a repository) are direct versus those that are transitive (indirect). This can lead to confusion about how to remediate (i.e. pin) specific transitive dependencies because the dependency chain is not present in the GitHub UI. That said, make sure to view [the Issue](https://github.com/github/roadmap/issues/494) on the Roadmap that tracks efforts to improve this experience.
 
 ## Inputs
 | Input     | Required | Description                                                                                |

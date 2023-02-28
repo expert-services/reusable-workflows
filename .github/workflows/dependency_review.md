@@ -60,7 +60,7 @@ Viewing the default dependency snapshot for the `pom.xml` file it is seen that t
 
 ![image](https://user-images.githubusercontent.com/107562400/221620926-259c5b6d-2920-48a6-839a-41e305858106.png)
 
-Examining the snapshot for `pom.xml` that is uploaded via the Submission API (note the Beta tag that helps identify it), it is seen that there are now 419 dependencies.
+Examining the snapshot for `pom.xml` that is uploaded via the Submission API (note the Beta tag that helps identify it), it is seen that there are now 439 dependencies.
 
 ![image](https://user-images.githubusercontent.com/107562400/221621049-8c349db8-c5c5-4230-aba3-e310377bae13.png)
 

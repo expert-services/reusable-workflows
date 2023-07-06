@@ -6,6 +6,11 @@ on:
         description: A short nam for the GitHub App that is being deployed
         required: true
         type: string
+      cloud-provider: 
+        description: The public cloud provider to deploy to
+        required: false
+        default: az
+        type: string
 env:
   TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
   TF_VAR_tenant_id: ${{ secrets.TENANT_ID }}
@@ -16,6 +21,7 @@ env:
 jobs:
   deploy:
     name: Azure Using OIDC
+    if: ${{ inputs.app-name == 'az' }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write

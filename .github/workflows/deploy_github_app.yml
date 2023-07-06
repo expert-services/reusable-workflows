@@ -21,7 +21,7 @@ env:
 jobs:
   deploy:
     name: Azure Using OIDC
-    if: ${{ inputs.app-name == 'az' }}
+    if: ${{ inputs.cloud-provider == 'az' }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write

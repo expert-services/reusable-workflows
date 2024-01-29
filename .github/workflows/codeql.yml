@@ -56,11 +56,11 @@ jobs:
           languages: ${{ inputs.languages }} 
       - name: Build Command
         if: ${{ inputs.buildCmd != '' }}
-        run: ${{ inputs.buildCmd }}
-        shell: ${{ inputs.shell }}
+        run: "${{ inputs.buildCmd }}"
+        shell: "${{ inputs.shell }}"
       - name: Build Script
         if: ${{ inputs.buildScript != '' }}
-        run: ${{ inputs.buildScript }}
-        shell: ${{ inputs.shell }}
+        run: "${{ inputs.buildScript }}"
+        shell: "${{ inputs.shell }}"
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

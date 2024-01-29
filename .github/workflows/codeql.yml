@@ -39,6 +39,10 @@ jobs:
       actions: read
       contents: read
       security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ${{ fromJSON(inputs.languages) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -53,7 +57,7 @@ jobs:
         with:
           #config-file: ./.github/codeql/codeql-config.yml
           queries: ${{ inputs.queries }} 
-          languages: ${{ inputs.languages }} 
+          languages: ${{ matrix.language }} 
       - name: Build Command
         if: ${{ inputs.buildCmd != '' }}
         run: ${{ inputs.buildCmd }}
@@ -62,5 +66,8 @@ jobs:
         if: ${{ inputs.buildScript != '' }}
         run: ${{ inputs.buildScript }}
         # shell: '${{ inputs.shell }}'
+      - name: Autobuild
+        if: ${{ inputs.buildCmd == '' && inputs.buildScript == '' }}
+        uses: github/codeql-action/autobuild@v3
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

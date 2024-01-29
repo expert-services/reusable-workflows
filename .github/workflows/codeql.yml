@@ -1,0 +1,66 @@
+name: CodeQL Scan
+on: 
+  workflow_call:
+    inputs:
+      queries:
+        description: The CodeQL query suite that should be used when scanning.
+        required: true
+        type: string
+      languages:
+        description: The languages that CodeQL should attempt to scan.
+        required: true
+        type: string
+      buildCmd:
+        description: The build command to use instead of autobuild.
+        required: false
+        type: string
+      pathToBuildScript:
+        description: The path to the build script to execuite instead of using autobuild or the buildCmd input.
+        required: false
+        type: string
+      shell:
+        description: The shell that will be used to execute a build command or build script.
+        required: false
+        default: bash
+        type: string
+      java-version:
+        description: Should be included if the the setup-java Action is needed.
+        required: false
+        type: string
+      java-distribution:
+        description: Should be included if the the setup-java Action is needed.
+        required: false
+        type: string
+jobs:
+  codeql:
+    name: CodeQL Scan
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java
+        if: ${{ inputs.java-version != '' && inputs.java-distribution != '' }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.java-version }} 
+          distribution: ${{ inputs.java-distribution}} 
+      - name: Initialize CodeQL Scanning
+        uses: github/codeql-action/init@v3
+        with:
+          #config-file: ./.github/codeql/codeql-config.yml
+          queries: ${{ inputs.queries }} 
+          languages: ${{ inputs.languages }} 
+      - name: Build Command
+        if: ${{ inputs.buildCmd != '' }}
+        run: ${{ inputs.buildCmd }}
+        shell: ${{ inputs.shell }}
+      - name: Build Script
+        if: ${{ inputs.buildScript != '' }}
+        run: ${{ inputs.buildScript }}
+        shell: ${{ inputs.shell }}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

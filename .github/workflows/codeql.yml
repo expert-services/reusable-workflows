@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       languages:
-        description: The languages that CodeQL should attempt to scan.
+        description: The languages that CodeQL should attempt to scan. Should be entered in the form of a JSON array (even if there is a single element).
         required: true
         type: string
       buildCmd:
@@ -33,7 +33,7 @@ on:
         type: string
 jobs:
   codeql:
-    name: CodeQL Scan
+    name: scan
     runs-on: ubuntu-latest
     permissions:
       actions: read

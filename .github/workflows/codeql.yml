@@ -59,11 +59,11 @@ jobs:
           queries: ${{ inputs.queries }} 
           languages: ${{ matrix.language }} 
       - name: Build Command
-        if: ${{ inputs.buildCmd != '' }}
+        if: ${{ inputs.buildCmd != '' && matrix.language != python && matrix.language != javascript && matrix.language != ruby }}
         run: ${{ inputs.buildCmd }}
         # shell: '${{ inputs.shell }}'
       - name: Build Script
-        if: ${{ inputs.buildScript != '' }}
+        if: ${{ inputs.buildScript != '' && matrix.language != python && matrix.language != javascript && matrix.language != ruby }}
         run: ${{ inputs.buildScript }}
         # shell: '${{ inputs.shell }}'
       - name: Autobuild

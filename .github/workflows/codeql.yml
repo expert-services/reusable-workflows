@@ -4,11 +4,13 @@ on:
     inputs:
       queries:
         description: The CodeQL query suite that should be used when scanning.
-        required: true
+        required: false
+        default: ${{ github.event.repository.custom_properties.codeql-query-suite }}
         type: string
       languages:
         description: The languages that CodeQL should attempt to scan. Should be entered in the form of a JSON array (even if there is a single element).
-        required: true
+        required: false
+        default: ${{ github.event.repository.custom_properties.codeql-languages }}
         type: string
       buildCmd:
         description: The build command to use instead of autobuild.

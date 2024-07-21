@@ -3,42 +3,36 @@ name: Dependency Review
 on: 
   workflow_call:
     inputs:
-      ecosystem:
-        description: Package dependency ecosystem that the application is written in (e.g., maven, gradle, npm)
+      manifests:
+        description: A JSON array of Java environments
+        type: string
         required: true
-        type: string
-      java-version:
-        description: Should be included if the ecosystem input supplied is maven.
-        required: false
-        type: string
-      java-distribution:
-        description: Should be included if the ecosystem input supplied is maven.
-        required: false
-        type: string
 jobs:
   dependency_analysis:
     name: Dependency Analysis
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{ fromJson(inputs.manifests) }}
     permissions:
       contents: write
       statuses: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Java
-        if: ${{ inputs.java-version != '' && inputs.java-distribution != '' }}
-        uses: actions/setup-java@v3
+        if: ${{ matrix.java-version != '' && matrix.java-distribution != '' }}
+        uses: actions/setup-java@v4
         with:
-          java-version: ${{ inputs.java-version }} 
-          distribution: ${{ inputs.java-distribution}} 
-      - name: Submit dependency snapshot for Java (Maven)
-        if: ${{ inputs.ecosystem == 'maven' }}
+          java-version: ${{ matrix.java-version }} 
+          distribution: ${{ matrix.java-distribution}} 
+      
+      
+      - name: Submit Dependency Snapshot
         uses: advanced-security/maven-dependency-submission-action@v3
         with:
-          snapshot-include-file-name: true
-      - name: Submit dependency snapshot for Java (Gradle)
-        if: ${{ inputs.ecosystem == 'gradle' }}
-        uses: mikepenz/gradle-dependency-submission@v0.8.4
+          directory: ${{ matrix.directory }}
+          correlator: ${{ github.job }}-${{ matrix.directory }}
       - name: Dependency validation
         if: ${{ github.event_name == 'pull_request' }}
         id: dependency_validation

@@ -11,7 +11,7 @@ on:
         description: The Java version that should be used with setup-java
         required: true
         type: string
-      distribution:
+      java-distribution:
         description: The Java distribution that should be used with setup-java
         required: true
         type: string
@@ -34,8 +34,8 @@ jobs:
       - name: Submit dependency snapshot for Java (Maven)
         uses: david-wiggs/maven-dependency-submission-action@unique-job-matrix
         with:
-          directory: ${{ matrix.directory }}
-          correlator: ${{ github.job }}-${{ matrix.directory }}
+          directory: ${{ inputs.directory }}
+          correlator: ${{ github.job }}-${{ inputs.directory }}
       - name: Dependency validation
         if: ${{ github.event_name == 'pull_request' }}
         id: dependency_validation

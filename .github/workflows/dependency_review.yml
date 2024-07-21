@@ -3,16 +3,22 @@ name: Dependency Review
 on: 
   workflow_call:
     inputs:
-      manifests:
-        description: A JSON array of Java environments
-        type: string
+      directory:
+        description: The directory containing the pom.xml file
         required: true
+        type: string
+      java-version:
+        description: The Java version that should be used with setup-java
+        required: true
+        type: string
+      distribution:
+        description: The Java distribution that should be used with setup-java
+        required: true
+        type: string
 jobs:
   dependency_analysis:
     name: Dependency Analysis
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(inputs.manifests) }}
     permissions:
       contents: write
       statuses: write
@@ -20,14 +26,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Java
-        if: ${{ matrix.java-version != '' && matrix.java-distribution != '' }}
+        if: ${{ inputs.java-version != '' && inputs.java-distribution != '' }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java-version }} 
-          distribution: ${{ matrix.java-distribution}} 
-      
-      
-      - name: Submit Dependency Snapshot
+          java-version: ${{ inputs.java-version }} 
+          distribution: ${{ inputs.java-distribution}} 
+      - name: Submit dependency snapshot for Java (Maven)
         uses: david-wiggs/maven-dependency-submission-action@unique-job-matrix
         with:
           directory: ${{ matrix.directory }}

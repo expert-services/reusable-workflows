@@ -12,8 +12,7 @@ jobs:
     name: Dependency Analysis
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        include: ${{ fromJson(inputs.manifests) }}
+      matrix: ${{ fromJson(inputs.manifests) }}
     permissions:
       contents: write
       statuses: write

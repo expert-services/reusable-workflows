@@ -67,7 +67,7 @@ jobs:
         
     - name: Initialize CodeQL default
       if: steps.custom_codeql_config.outputs.files_exists == 'false'
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
         config-file: mbaluda-org/security_team/codeql-config.yml@main

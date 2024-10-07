@@ -4,11 +4,38 @@ on:
   workflow_call:
     outputs:
       languages:
-        description: "The languages linguist detected"
+        description: 'The languages linguist detected'
         value: ${{ jobs.detect-languages.outputs.languages }}
       codeql_supported_languages:
         description: "Languages detected by linguist that are supported by CodQL"
         value: ${{ jobs.detect-languages.outputs.codeql_supported_languages }}
+    inputs:
+      queries:
+        description: The CodeQL query suite that should be used when scanning.
+        required: false
+        default: code-scanning
+        type: string
+      buildCmd:
+        description: The build command to use instead of autobuild.
+        required: false
+        type: string
+      pathToBuildScript:
+        description: The path to the build script to execuite instead of using autobuild or the buildCmd input.
+        required: false
+        type: string
+      shell:
+        description: The shell that will be used to execute a build command or build script.
+        required: false
+        default: 'bash'
+        type: string
+      java-version:
+        description: Should be included if the the setup-java Action is needed.
+        required: false
+        type: string
+      java-distribution:
+        description: Should be included if the the setup-java Action is needed.
+        required: false
+        type: string
 
 jobs:
   detect-languages:
@@ -57,23 +84,33 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
         
-    - name: Initialize CodeQL default
+    - name: Setup Java
+      if: ${{ inputs.java-version != '' && inputs.java-distribution != '' }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ inputs.java-version }} 
+        distribution: ${{ inputs.java-distribution}} 
+    
+    - name: Initialize CodeQL Scanning
       uses: github/codeql-action/init@v3
       with:
-        languages: ${{ matrix.language }}
-        # debug: true
-        
-    # - name: Initialize CodeQL custom
-    #   if: steps.custom_codeql_config.outputs.files_exists == 'true'
-    #   uses: github/codeql-action/init@v3
-    #   with:
-    #     languages: ${{ matrix.language }}
-    #     config-file: ./.github/codeql/codeql-config.yml
-    #     # debug: true    
-  
-    - name: Build default
-      if: steps.custom_build_action.outputs.files_exists == 'false'
+        #config-file: ./.github/codeql/codeql-config.yml
+        queries: ${{ inputs.queries }} 
+        languages: ${{ matrix.language }} 
+    
+    - name: Build Command
+      if: ${{ inputs.buildCmd != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' }}
+      run: ${{ inputs.buildCmd }}
+      shell: ${{ inputs.shell }}
+    
+    - name: Build Script
+      if: ${{ inputs.buildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' }}
+      run: ${{ inputs.buildScript }}
+      shell: ${{ inputs.shell }}
+    
+    - name: Autobuild
+      if: ${{ inputs.buildCmd == '' && inputs.buildScript == '' }}
       uses: github/codeql-action/autobuild@v3
-  
+    
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

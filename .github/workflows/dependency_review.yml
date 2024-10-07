@@ -42,7 +42,7 @@ jobs:
       - name: Dependency validation
         if: ${{ github.event_name == 'pull_request' }}
         id: dependency_validation
-        uses: actions/dependency-review-action@v2
+        uses: actions/dependency-review-action@v4
         continue-on-error: true
         with:
           fail-on-scopes: "runtime, development, unknown"

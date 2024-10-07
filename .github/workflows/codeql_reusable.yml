@@ -1,0 +1,110 @@
+name: CodeQL (Reusable Workflow)
+
+on:
+  workflow_call:
+    outputs:
+      languages:
+        description: "The languages linguist detected"
+        value: ${{ jobs.detect-languages.outputs.languages }}
+      codeql_supported_languages:
+        description: "Languages detected by linguist that are supported by CodQL"
+        value: ${{ jobs.detect-languages.outputs.codeql_supported_languages }}
+
+jobs:
+  detect-languages:
+    runs-on: ubuntu-latest
+    outputs:
+      languages: ${{ steps.github-linguist.outputs.languages }}
+      codeql_supported_languages: ${{ steps.github-linguist.outputs.codeql_supported_languages }}
+    
+    container:
+      image: ghcr.io/expert-services/linguist@sha256:2379c92600638bc8298816d0837c0bc8ddfa530db734fcc858b7033001d5051c
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Execute github-linguist
+        id: github-linguist
+        run: |
+          chown -R root:root .
+          export languages=$(github-linguist --json)
+          echo "$languages"          
+          echo "languages=${languages}" >> $GITHUB_OUTPUT
+
+      - name: Query language names and update GITHUB_OUTPUT
+        id: codeql_languages
+        run: |
+          export codeql_supported_languages=$(echo '${{ steps.github-linguist.outputs.languages }}' | jq -c '[{"C":"cpp", "C++":"cpp", "C#":"csharp", "Go":"go", "Java":"java", "Kotlin":"java", "JavaScript":"javascript", "TypeScript":"javascript", "Python":"python", "Ruby":"ruby"} [keys[]]] | unique -[null]')
+          echo "$codeql_supported_languages"
+          echo "codeql_supported_languages=${codeql_supported_languages}" >> $GITHUB_OUTPUT
+    
+  codeql-analysis:
+    needs: [detect-languages]
+    # skip the analysis when the list of languages is empty
+    if: needs.detect-languages.outputs.codeql_supported_languages != '[]'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+  
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ${{ fromJSON(needs.detect-languages.outputs.codeql_supported_languages) }}
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        
+    - name: Check CodeQL config existence
+      id: custom_codeql_config
+      uses: andstor/file-existence-action@v2
+      with:
+        files: "./.github/codeql/codeql-config.yml"
+        
+    - name: Initialize CodeQL default
+      if: steps.custom_codeql_config.outputs.files_exists == 'false'
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        config-file: mbaluda-org/security_team/codeql-config.yml@main
+        #debug: true
+        
+    - name: Initialize CodeQL custom
+      if: steps.custom_codeql_config.outputs.files_exists == 'true'
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        config-file: ./.github/codeql/codeql-config.yml
+        debug: true    
+    
+    - uses: actions/setup-java@v3
+      if: steps.custom_build_action.outputs.files_exists == 'false' && matrix.language == 'java'
+      with:
+        distribution: ${{inputs.java_distribution}}
+        java-version: ${{inputs.java_version}}
+  
+    - name: Check local build action existence
+      id: custom_build_action
+      uses: andstor/file-existence-action@v2
+      with:
+        files: "./.github/actions/custom_build/action.yml"
+  
+    - name: Build default
+      if: steps.custom_build_action.outputs.files_exists == 'false'
+      uses: github/codeql-action/autobuild@v2
+  
+    - name: Build custom
+      if: steps.custom_build_action.outputs.files_exists == 'true'
+      uses: ./.github/actions/custom_build
+      with:
+        languages: ${{ matrix.language }}
+  
+    # perform the analysis
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+    

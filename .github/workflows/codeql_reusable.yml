@@ -51,7 +51,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ${{ fromJSON(needs.detect-languages.outputs.codeql_supported_languages) }}
+        language: ${{ needs.detect-languages.outputs.codeql_supported_languages }}
         
     steps:
     - name: Checkout repository

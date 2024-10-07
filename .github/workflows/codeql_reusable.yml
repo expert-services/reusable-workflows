@@ -87,8 +87,8 @@ jobs:
     
     - name: 'Initialize CodeQL Scanning (build-mode: none)'
       if: |
-        ${{ (inputs.buildCmd == '' && inputs.pathToBuildScript == '' && matrix.language != 'go') }} ||
-        ${{ (matrix.language == 'python' && matrix.language == 'javascript' && matrix.language == 'ruby') }}
+        (${{ inputs.buildCmd == '' && inputs.pathToBuildScript == '' && matrix.language != 'go' }}) ||
+        (${{ matrix.language == 'python' && matrix.language == 'javascript' && matrix.language == 'ruby' }})
       uses: github/codeql-action/init@v3
       with:
         #config-file: ./.github/codeql/codeql-config.yml
@@ -105,8 +105,7 @@ jobs:
 
     - name: 'Initialize CodeQL Scanning (build-mode: manual)'
       if: |
-        ${{ inputs.buildCmd != '' || inputs.pathToBuildScript != '' }} &&
-        ${{ (matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby') }}
+        ${{ inputs.buildCmd != '' || inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go' }}
       uses: github/codeql-action/init@v3
       with:
         #config-file: ./.github/codeql/codeql-config.yml
@@ -118,7 +117,7 @@ jobs:
       run: ${{ inputs.buildCmd }}
     
     - name: Build Script
-      if: ${{ inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go'}}
+      if: ${{ inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go' }}
       run: ${{ inputs.pathToBuildScript }}
     
     - name: Autobuild

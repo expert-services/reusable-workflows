@@ -105,7 +105,8 @@ jobs:
 
     - name: 'Initialize CodeQL Scanning (build-mode: manual)'
       if: |
-        ${{ inputs.buildCmd != '' || inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go' }}
+        ${{ inputs.buildCmd != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go' ) || 
+        (inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go') }}
       uses: github/codeql-action/init@v3
       with:
         #config-file: ./.github/codeql/codeql-config.yml

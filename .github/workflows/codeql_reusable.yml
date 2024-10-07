@@ -79,14 +79,16 @@ jobs:
       uses: actions/checkout@v4
         
     - name: Setup Java
-      if: ${{ inputs.java-version != '' && inputs.java-distribution != '' }}
+      if: ${{ inputs.java-version != '' && inputs.java-distribution != '' && matrix.language != 'java'}}
       uses: actions/setup-java@v4
       with:
         java-version: ${{ inputs.java-version }} 
         distribution: ${{ inputs.java-distribution}} 
     
     - name: 'Initialize CodeQL Scanning (build-mode: none)'
-      if: ${{ (inputs.buildCmd == '' && inputs.pathToBuildScript == '' && matrix.language != 'go') || (matrix.language == 'python' && matrix.language == 'javascript' && matrix.language == 'ruby') }}
+      if: |
+        ${{ (inputs.buildCmd == '' && inputs.pathToBuildScript == '' && matrix.language != 'go') }} ||
+        ${{ (matrix.language == 'python' && matrix.language == 'javascript' && matrix.language == 'ruby') }}
       uses: github/codeql-action/init@v3
       with:
         #config-file: ./.github/codeql/codeql-config.yml

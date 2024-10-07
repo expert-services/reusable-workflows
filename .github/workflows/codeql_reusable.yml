@@ -86,7 +86,7 @@ jobs:
         distribution: ${{ inputs.java-distribution}} 
     
     - name: 'Initialize CodeQL Scanning (build-mode: none)'
-      if: ${{ inputs.buildCmd == '' && inputs.pathToBuildScript == '' }}
+      if: ${{ inputs.buildCmd == '' && inputs.pathToBuildScript == '' && matrix.language != 'go' }}
       uses: github/codeql-action/init@v3
       with:
         #config-file: ./.github/codeql/codeql-config.yml

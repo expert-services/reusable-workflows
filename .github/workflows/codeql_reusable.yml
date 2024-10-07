@@ -85,11 +85,21 @@ jobs:
         java-version: ${{ inputs.java-version }} 
         distribution: ${{ inputs.java-distribution}} 
     
-    - name: Initialize CodeQL Scanning
+    - name: 'Initialize CodeQL Scanning (build-mode: none)'
+      if: ${{ inputs.buildCmd == '' && inputs.buildScript == '' }}
       uses: github/codeql-action/init@v3
       with:
         #config-file: ./.github/codeql/codeql-config.yml
         languages: ${{ matrix.language }} 
+        build-mode: none
+
+    - name: 'Initialize CodeQL Scanning (build-mode: manual)'
+      if: ${{ inputs.buildCmd != '' || inputs.pathToBuildScript != '' }}
+      uses: github/codeql-action/init@v3
+      with:
+        #config-file: ./.github/codeql/codeql-config.yml
+        languages: ${{ matrix.language }} 
+        build-mode: manual
     
     - name: Build Command
       if: ${{ inputs.buildCmd != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go'}}
@@ -98,10 +108,6 @@ jobs:
     - name: Build Script
       if: ${{ inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go'}}
       run: ${{ inputs.pathToBuildScript }}
-    
-    - name: Autobuild
-      if: ${{ inputs.buildCmd == '' && inputs.buildScript == '' }}
-      uses: github/codeql-action/autobuild@v3
     
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

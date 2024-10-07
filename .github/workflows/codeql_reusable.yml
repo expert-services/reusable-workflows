@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       languages: ${{ steps.github-linguist.outputs.languages }}
-      codeql_supported_languages: ${{ steps.github-linguist.outputs.codeql_supported_languages }}
+      codeql_supported_languages: ${{ steps.codeql_languages.outputs.codeql_supported_languages }}
     
     container:
       image: ghcr.io/expert-services/linguist@sha256:2379c92600638bc8298816d0837c0bc8ddfa530db734fcc858b7033001d5051c

@@ -55,7 +55,7 @@ jobs:
       - name: Query language names and update GITHUB_OUTPUT
         id: codeql_languages
         run: |
-          export codeql_supported_languages=$(echo '${{ steps.github-linguist.outputs.languages }}' | jq -c '[{"C":"cpp", "C++":"cpp", "C#":"csharp", "Go":"go", "Java":"java", "Kotlin":"java", "JavaScript":"javascript", "TypeScript":"javascript", "Python":"python", "Ruby":"ruby"} [keys[]]] | unique -[null]')
+          export codeql_supported_languages=$(echo '${{ steps.github-linguist.outputs.languages }}' | jq -c '[{"C":"cpp", "C++":"cpp", "C#":"csharp", "Go":"go", "Java":"java", "Kotlin":"java", "JavaScript":"javascript", "TypeScript":"javascript", "Python":"python", "Ruby":"ruby", "Swift":"swift"} [keys[]]] | unique -[null]')
           echo "$codeql_supported_languages"
           echo "codeql_supported_languages=${codeql_supported_languages}" >> $GITHUB_OUTPUT
     

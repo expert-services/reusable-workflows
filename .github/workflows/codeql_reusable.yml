@@ -57,52 +57,23 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
         
-    - name: Check CodeQL config existence
-      id: custom_codeql_config
-      uses: andstor/file-existence-action@v2
-      with:
-        files: "./.github/codeql/codeql-config.yml"
-        
     - name: Initialize CodeQL default
-      if: steps.custom_codeql_config.outputs.files_exists == 'false'
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        config-file: mbaluda-org/security_team/codeql-config.yml@main
-        #debug: true
+        # debug: true
         
-    - name: Initialize CodeQL custom
-      if: steps.custom_codeql_config.outputs.files_exists == 'true'
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-        config-file: ./.github/codeql/codeql-config.yml
-        debug: true    
-    
-    - uses: actions/setup-java@v3
-      if: steps.custom_build_action.outputs.files_exists == 'false' && matrix.language == 'java'
-      with:
-        distribution: ${{inputs.java_distribution}}
-        java-version: ${{inputs.java_version}}
-  
-    - name: Check local build action existence
-      id: custom_build_action
-      uses: andstor/file-existence-action@v2
-      with:
-        files: "./.github/actions/custom_build/action.yml"
+    # - name: Initialize CodeQL custom
+    #   if: steps.custom_codeql_config.outputs.files_exists == 'true'
+    #   uses: github/codeql-action/init@v3
+    #   with:
+    #     languages: ${{ matrix.language }}
+    #     config-file: ./.github/codeql/codeql-config.yml
+    #     # debug: true    
   
     - name: Build default
       if: steps.custom_build_action.outputs.files_exists == 'false'
-      uses: github/codeql-action/autobuild@v2
+      uses: github/codeql-action/autobuild@v3
   
-    - name: Build custom
-      if: steps.custom_build_action.outputs.files_exists == 'true'
-      uses: ./.github/actions/custom_build
-      with:
-        languages: ${{ matrix.language }}
-  
-    # perform the analysis
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-
-    
+      uses: github/codeql-action/analyze@v3

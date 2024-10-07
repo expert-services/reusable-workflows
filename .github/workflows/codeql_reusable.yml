@@ -10,10 +10,9 @@ on:
         description: "Languages detected by linguist that are supported by CodQL"
         value: ${{ jobs.detect-languages.outputs.codeql_supported_languages }}
     inputs:
-      queries:
-        description: The CodeQL query suite that should be used when scanning.
+      pathToCodeqlConfig:
+        description: The path to the config.yml file that CodeQL should use 
         required: false
-        default: code-scanning
         type: string
       buildCmd:
         description: The build command to use instead of autobuild.
@@ -90,7 +89,6 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         #config-file: ./.github/codeql/codeql-config.yml
-        queries: ${{ inputs.queries }} 
         languages: ${{ matrix.language }} 
     
     - name: Build Command
@@ -98,8 +96,8 @@ jobs:
       run: ${{ inputs.buildCmd }}
     
     - name: Build Script
-      if: ${{ inputs.buildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go'}}
-      run: ${{ inputs.buildScript }}
+      if: ${{ inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go'}}
+      run: ${{ inputs.pathToBuildScript }}
     
     - name: Autobuild
       if: ${{ inputs.buildCmd == '' && inputs.buildScript == '' }}

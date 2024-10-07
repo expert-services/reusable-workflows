@@ -23,11 +23,6 @@ on:
         description: The path to the build script to execuite instead of using autobuild or the buildCmd input.
         required: false
         type: string
-      shell:
-        description: The shell that will be used to execute a build command or build script.
-        required: false
-        default: 'bash'
-        type: string
       java-version:
         description: Should be included if the the setup-java Action is needed.
         required: false
@@ -101,12 +96,10 @@ jobs:
     - name: Build Command
       if: ${{ inputs.buildCmd != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' }}
       run: ${{ inputs.buildCmd }}
-      shell: ${{ inputs.shell }}
     
     - name: Build Script
       if: ${{ inputs.buildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' }}
       run: ${{ inputs.buildScript }}
-      shell: ${{ inputs.shell }}
     
     - name: Autobuild
       if: ${{ inputs.buildCmd == '' && inputs.buildScript == '' }}

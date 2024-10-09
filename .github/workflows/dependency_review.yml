@@ -38,7 +38,7 @@ jobs:
           snapshot-include-file-name: true
       - name: Submit dependency snapshot for Java (Gradle)
         if: ${{ inputs.ecosystem == 'gradle' }}
-        uses: mikepenz/gradle-dependency-submission@v0.8.4
+        uses: mikepenz/gradle-dependency-submission@v1.0.0
       - name: Dependency validation
         if: ${{ github.event_name == 'pull_request' }}
         id: dependency_validation

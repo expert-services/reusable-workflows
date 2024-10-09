@@ -119,7 +119,7 @@ jobs:
     
     - name: Build Script
       if: ${{ inputs.pathToBuildScript != '' && matrix.language != 'python' && matrix.language != 'javascript' && matrix.language != 'ruby' && matrix.language != 'go' }}
-      run: ${{ inputs.pathToBuildScript }}
+      run: sh ${{ inputs.pathToBuildScript }}
     
     - name: Autobuild
       if: ${{ matrix.language == 'go' }}

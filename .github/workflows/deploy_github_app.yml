@@ -41,7 +41,7 @@ jobs:
         with:
           terraform_version: 1.4.6
       - name: Deploy Azure Infrastructure
-        uses: azure/powershell@v1
+        uses: azure/powershell@v2
         with:
           inlineScript: |
             $storageAccountName = "${{ inputs.app-name }}state$env:GITHUB_REPOSITORY_OWNER".Replace('-','').ToLower()

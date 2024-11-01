@@ -33,7 +33,7 @@ jobs:
           distribution: ${{ inputs.java-distribution}} 
       - name: Submit dependency snapshot for Java (Maven)
         if: ${{ inputs.ecosystem == 'maven' }}
-        uses: advanced-security/maven-dependency-submission-action@v3
+        uses: advanced-security/maven-dependency-submission-action@v4
         with:
           snapshot-include-file-name: true
       - name: Submit dependency snapshot for Java (Gradle)
